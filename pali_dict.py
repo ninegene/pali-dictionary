@@ -12,7 +12,7 @@ app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'pali_dict.db'),
     DEBUG=True,
 ))
-app.config.from_envvar('FLASKR_SETTINGS', silent=True)
+app.config.from_envvar('PALI_DICTIONARY_SETTINGS', silent=True)
 
 
 def connect_db():
