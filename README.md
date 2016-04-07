@@ -89,3 +89,22 @@ select * from lookup_letter;
 Note: had to drop pali_dict.db and recreated it (export pali_mm table to cvs and
 delete pali_dict.db and recreate new one by importing csv file)
 because it has 170MB and excedded github file limit 100MB.
+
+
+## mithril
+
+* http://lhorie.github.io/mithril/mithril.html
+* http://lhorie.github.io/mithril/mithril.component.html
+* http://lhorie.github.io/mithril/components.html#application-architecture-with-components
+* http://lhorie.github.io/mithril/mithril.prop.html
+* http://lhorie.github.io/mithril/mithril.deferred.html
+* http://lhorie.github.io/mithril/mithril.computation.html
+
+Misc Notes:
+http://stackoverflow.com/questions/8195741/how-do-they-do-this-mobile-site-added-to-homescreen-appears-as-standalone-app
+
+Why m.props()?
+* http://lhorie.github.io/mithril-blog/the-uniform-access-principle.html
+* http://lhorie.github.io/mithril-blog/json-all-the-things.html
+
+

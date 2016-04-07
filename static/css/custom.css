@@ -33,8 +33,7 @@ h1 {
 .search-container input#search{
   width: 220px;
   height: 50px;
-  font-size: 18px;
-  padding: 12px 5px 15px 10px;
+  font-size: 20px;
   border: 1px solid rgba(85, 39, 10, 0.7);
   /*background: rgba(85, 39, 10, 0.7);*/
   background: transparent;
@@ -42,23 +41,27 @@ h1 {
   margin: 0;
 }
 
-.icon {
+.search-icon {
   display: inline-block;
   height: 50px;
-  padding: 6px 8px 0 15px;
   text-align: center;
-  font-size: 28px;
+  font-size: 20px;
+  color: #fafafa;
   font-weight: 600;
-  line-height: 28px;
+  line-height: 20px;
   text-decoration: none;
   background: rgba(85, 39, 10, 0.7);
   color: #fafafa;
   white-space: nowrap;
   border-radius: 4px;
-  border: 0px solid rgba(85, 39, 10, 0.7);
   cursor: pointer;
   box-sizing: border-box;
   margin: 0;
+  margin-left: 2px;
+}
+
+.not-found {
+  padding: 3em 0;
 }
 
 @media (min-width: 550px) {
