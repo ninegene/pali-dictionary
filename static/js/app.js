@@ -3,9 +3,9 @@ function logRequest(reqUrl, response) {
   return response;
 }
 
-function logError(reqUrl, error) {
-  console.log(reqUrl, error);
-  return error;
+function onFetchResultsError(reqUrl, error) {
+  console.error(reqUrl, error);
+  return []; // return empty array on error
 }
 
 function fetchResults(url) {
@@ -20,7 +20,7 @@ function fetchResults(url) {
       return response.error;
     }
   }).then(logRequest.bind(this, url))
-    .catch(logError.bind(this, url));
+    .catch(onFetchResultsError.bind(this, url));
 }
 
 function paliStartsWith(searchTerms) {
@@ -43,11 +43,9 @@ var App = {
   searchOption: m.prop('paliStartsWith'),
   searchTerms: m.prop(''),
   searchResults: m.prop([]),
-  onSearchOptionChanged: function (option) {
-    this.searchOption = m.prop(option);
-  },
+
   onSearch: function (searchTerms) {
-    this.searchTerms = m.prop(searchTerms);
+    this.searchTerms(searchTerms);
     switch (this.searchOption()) {
       case 'paliStartsWith':
         paliStartsWith(searchTerms).then(this.searchResults);
@@ -55,11 +53,20 @@ var App = {
     }
   },
 
+  onClearSearch: function () {
+    this.searchTerms('');
+  },
+
+  onSearchOptionChanged: function (option) {
+    this.searchOption = m.prop(option);
+  },
+
   view: function () {
     return m(".container", [
       m("h1.title.my", this.pageTitle()),
       m.component(SearchForm, {
         onSearch: this.onSearch,
+        onClearSearch: this.onClearSearch,
         onSearchOptionChanged: this.onSearchOptionChanged
       }),
       m.component(SearchResults, {
@@ -76,14 +83,33 @@ var SearchForm = {
   searchButtonText: m.prop('ရှာ'),
 
   view: function (ctrl, args) {
-    return m(".search-container", [
-      m("input#search.my[type=search]", {
-          placeholder: this.searchPlaceholder(),
-          oninput: m.withAttr('value', this.searchTerms),
-          value: this.searchTerms()
-        }),
-      m("button.search-icon.my[type=button]", {
-          onclick: args.onSearch.bind(App, this.searchTerms())
+    var self = this;
+
+    return m("form.search-wrapper", [
+      m("input#search-box.my[type=search]", {
+        placeholder: this.searchPlaceholder(),
+        autocomplete: 'off',
+        autofocus: true,
+        required: true,
+        oninput: m.withAttr('value', this.searchTerms),
+        value: this.searchTerms()
+      }),
+      this.searchTerms() ?
+        m("button.clear-search-icon.my[type=button]", {
+            onclick: function () {
+              this.searchTerms('');
+              args.onClearSearch.bind(App)();
+            }.bind(this)
+          },
+          'x')
+        :
+        null
+      ,
+      m("button.search-btn.my[type=button]", {
+          onclick: function () {
+            args.onSearch.bind(App)(self.searchTerms());
+            document.getElementById('search-box').focus();
+          }
         },
         this.searchButtonText())
     ]);
@@ -100,7 +126,7 @@ var SearchResults = {
       ]);
     });
 
-    return m(".row", [
+    return m(".row.search-results", [
       list.length > 0 ? m("dl", list) : m('.not-found', args.searchTerms ? 'No entry found!' : '')
     ]);
   }
