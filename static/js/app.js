@@ -38,6 +38,7 @@ function myanmarContains(searchTerms) {
   return fetchResults(url);
 }
 
+// put controller logic inside App instead of within controller function
 var App = {
   pageTitle: m.prop("ပါဠိ မြန်မာ အဘိ​ဓာ​န​်"),
   searchOption: m.prop('paliStartsWith'),

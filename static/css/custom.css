@@ -11,7 +11,7 @@ body {
 }
 
 .my {
-  font-family: "Myanmar Census", sans-serif;
+  font-family: Padauk, sans-serif;
 }
 
 .term {
@@ -48,25 +48,27 @@ input#search-box {
   color: #000;
   margin: 0;
   border-radius: 0;
+  padding-right: 50px;
 }
 
 .clear-search-icon {
   margin-left: -50px;
   border-radius: 30px;
-  font-size: 18px;
+  font-size: 16px;
   color: #000;
   /* font-family: sans-serif; */
-  height: 48px;
-  width: 48px;
+  height: 46px;
+  width: 46px;
   padding: 0;
   border: 0;
   position: absolute;
   top: 2px;
+  background-color: #fafafa;
 }
 
 .clear-search-icon:hover, .clear-search-icon:focus {
   color: #000;
-  background-color: #fafafa;
+  background-color: #F1F1F1;
   border: 0;
 }
 
@@ -108,6 +110,6 @@ input#search-box {
   }
 
   input#search-box {
-    width: 450px;
+    width: 350px;
   }
 }
