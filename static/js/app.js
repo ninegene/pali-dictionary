@@ -81,15 +81,15 @@ var App = {
       location.hash = '#searchBox';
       var input = document.getElementById('search-box');
       searchTerms(terms);
+      function scrollToResults() {
+        location.hash = '#searchResults'; // scroll to results
+      }
       switch (searchOption()) {
         case 'paliStartsWith':
-          paliStartsWith(terms).then(searchResults);
+          paliStartsWith(terms).then(searchResults).then(scrollToResults);
           break;
       }
       input.blur();
-      setTimeout(function() {
-        location.hash = '#searchResults'; // scroll to results
-      }, 100);
     }
 
     function handleClearSearch() {
