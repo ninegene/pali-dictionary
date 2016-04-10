@@ -77,6 +77,7 @@ var App = {
     }
 
     function handleSearch(terms) {
+      location.hash = '#searchBox';
       var input = document.getElementById('search-box');
       searchTerms(terms);
       switch (searchOption()) {
@@ -84,7 +85,10 @@ var App = {
           paliStartsWith(terms).then(searchResults);
           break;
       }
-      input.focus();
+      input.blur();
+      setTimeout(function() {
+        location.hash = '#searchResults'; // scroll to results
+      }, 1000);
     }
 
     function handleClearSearch() {
@@ -153,6 +157,7 @@ var SearchForm = {
 
   view: function (ctrl) {
     return m("form.search-wrapper", [
+      m('a[name=searchBox]'),
       m("input#search-box.my[type=search]", {
         placeholder: ctrl.searchPlaceholder(),
         autocomplete: 'off',
@@ -258,6 +263,7 @@ var SearchResults = {
     }
 
     return m(".row.search-results", [
+      m('a[name=searchResults]'),
       list.length > 0 ? m("dl", list) : m('.not-found', didSearch && list.length == 0 ? 'No entry found!' : '')
     ]);
   }
