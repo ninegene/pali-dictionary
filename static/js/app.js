@@ -74,6 +74,7 @@ var App = {
       searchTerms(text);
       input.value = text;
       input.focus();
+      input.blur();
     }
 
     function handleSearch(terms) {
@@ -88,7 +89,7 @@ var App = {
       input.blur();
       setTimeout(function() {
         location.hash = '#searchResults'; // scroll to results
-      }, 1000);
+      }, 100);
     }
 
     function handleClearSearch() {
@@ -177,8 +178,7 @@ var SearchForm = {
       ,
       m("button.search-btn.my[type=button]", {
           onclick: function () {
-            ctrl.onSearch.bind(App)(ctrl.searchTerms());
-            document.getElementById('search-box').focus();
+            ctrl.onSearch(ctrl.searchTerms());
           }
         },
         ctrl.searchButtonText())
