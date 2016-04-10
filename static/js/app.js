@@ -52,6 +52,10 @@ var App = {
     var showEn = m.prop(false);
     var showPh = m.prop(false);
 
+    function scrollToSearchBox() {
+      location.hash = '#searchBox';
+    }
+
     function handleKeyPress(key) {
       var input = document.getElementById('search-box');
       var selection = window.getSelection();
@@ -75,10 +79,10 @@ var App = {
       input.value = text;
       input.focus();
       input.blur();
+      scrollToSearchBox();
     }
 
     function handleSearch(terms) {
-      location.hash = '#searchBox';
       var input = document.getElementById('search-box');
       searchTerms(terms);
       switch (searchOption()) {
@@ -93,6 +97,7 @@ var App = {
       var input = document.getElementById('search-box');
       searchTerms('');
       input.focus();
+      scrollToSearchBox();
     }
 
     function handleSearchOptionChanged(option) {
