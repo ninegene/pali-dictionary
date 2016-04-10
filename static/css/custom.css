@@ -107,6 +107,7 @@ input#search-box {
 .nwm-container {
   text-align: center;
 }
+
 .nwm-left, .nwm-middle, .nwm-right {
   display: inline-block;
   vertical-align: top;
@@ -134,10 +135,20 @@ ul.nwm-keygroup {
   margin-bottom: 5px;
 }
 
-.nwm-key input {
+.nwm-en {
+  font-weight: 600;
+  font-size: 1em;
+}
+
+.nwm-ph {
+  font-weight: normal;
+  font-size: 1em;
+}
+
+input.nwm-my {
   font-family: Padauk, sans-serif;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 1em;
   background-color: transparent;
   color: #000000;
   height: 30px;
