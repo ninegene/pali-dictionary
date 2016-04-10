@@ -1,3 +1,10 @@
+## ToDo
+* Fix ဈ vs စ+ျ in database
+* Implement en => my key mapping to allow to type using os keyboard
+* Implement search options (search pali contains, myanmar contains)
+* Implement "Previous" & "Next" on paliStartsWith
+
+
 ## Initial Setup Notes
 
 ```
