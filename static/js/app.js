@@ -56,6 +56,14 @@ var App = {
       location.hash = '#searchBox';
     }
 
+    function scrollToResults() {
+      var input = document.getElementById('search-box');
+      input.blur();
+      setTimeout(function() {
+        location.hash = '#searchResults'; // scroll to results
+      }, 200);
+    }
+
     function handleKeyPress(key) {
       var input = document.getElementById('search-box');
       var selection = window.getSelection();
@@ -83,14 +91,12 @@ var App = {
     }
 
     function handleSearch(terms) {
-      var input = document.getElementById('search-box');
       searchTerms(terms);
       switch (searchOption()) {
         case 'paliStartsWith':
-          paliStartsWith(terms).then(searchResults);
+          paliStartsWith(terms).then(searchResults).then(scrollToResults);
           break;
       }
-      input.blur();
     }
 
     function handleClearSearch() {
@@ -247,14 +253,9 @@ var MyanmarKeyboard = {
 var SearchResults = {
 
   controller: function (args) {
-    function scrollToResults() {
-      location.hash = '#searchResults'; // scroll to results
-    }
-
     return {
       searchResults: args.searchResults,
       searchTerms: args.searchTerms,
-      scrollToResults: scrollToResults
     }
   },
   view: function (ctrl) {
@@ -268,10 +269,6 @@ var SearchResults = {
           m("dd.definition.my", [entry.mm])
         ]);
       });
-
-      if (list.length > 0) {
-        setTimeout(ctrl.scrollToResults, 200);
-      }
     }
 
     return m(".row.search-results", [
