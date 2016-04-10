@@ -47,22 +47,50 @@ var App = {
     var searchPlaceholder = m.prop('Search ...');
     var searchButtonText = m.prop('ရှာ');
     var searchOption = m.prop('paliStartsWith');
-    var searchResults = m.prop([]);
+    var searchResults = m.prop(null);
     var keysLayout = m.prop(MY_KEYS_LAYOUT);
-    var showEn = m.prop(true);
+    var showEn = m.prop(false);
     var showPh = m.prop(false);
 
+    function handleKeyPress(key) {
+      var input = document.getElementById('search-box');
+      var selection = window.getSelection();
+      var selectedText = selection.toString();
+      var text = input.value;
+      console.log('selection:', selectedText);
+
+      if (input.selectionStart || input.selectionStart == '0') {
+        var start = input.selectionStart;
+        var end = input.selectionEnd;
+        var cur = start;
+        text = text.substring(0, start) + key + text.substring(end, text.length);
+        cur = cur + key.length;
+        input.selectionStart = cur;
+        input.selectionEnd = cur;
+      } else {
+        text = text + key;
+      }
+
+      searchTerms(text);
+      input.value = text;
+      input.focus();
+    }
+
     function handleSearch(terms) {
+      var input = document.getElementById('search-box');
       searchTerms(terms);
       switch (searchOption()) {
         case 'paliStartsWith':
           paliStartsWith(terms).then(searchResults);
           break;
       }
+      input.focus();
     }
 
     function handleClearSearch() {
+      var input = document.getElementById('search-box');
       searchTerms('');
+      input.focus();
     }
 
     function handleSearchOptionChanged(option) {
@@ -79,6 +107,7 @@ var App = {
       keysLayout: keysLayout,
       showEn: showEn,
       showPh: showPh,
+      onKeyPress: handleKeyPress,
       onSearch: handleSearch,
       onClearSearch: handleClearSearch,
       onSearchOptionChanged: handleSearchOptionChanged,
@@ -101,6 +130,7 @@ var App = {
         keysLayout: ctrl.keysLayout,
         showEn: ctrl.showEn,
         showPh: ctrl.showPh,
+        onKeyPress: ctrl.onKeyPress,
       }),
       m.component(SearchResults, {
         searchTerms: ctrl.searchTerms,
@@ -126,6 +156,7 @@ var SearchForm = {
       m("input#search-box.my[type=search]", {
         placeholder: ctrl.searchPlaceholder(),
         autocomplete: 'off',
+        autocapitalize: 'off',
         autofocus: true,
         required: true,
         oninput: m.withAttr('value', ctrl.searchTerms),
@@ -156,15 +187,16 @@ var MyanmarKeyboard = {
       keysLayout: args.keysLayout,
       showEn: args.showEn,
       showPh: args.showPh,
+      onKeyPress: args.onKeyPress,
     }
   },
-  keygroupView: function (keygroup, showEn, showPh) {
+  keygroupView: function (keygroup, showEn, showPh, onKeyPress) {
     return m('ul.nwm-keygroup', [
       keygroup.map(function (k) {
         return k.my ?
           m('li.nwm-key', [
             showPh ? m('.nwm-ph', k.ph  || m.trust('&nbsp;')) : undefined,
-            m('input.nwm-my[type=button]', {value: k.my || '-'}),
+            m('input.nwm-my[type=button]', {value: k.my, onclick: onKeyPress.bind(this, k.my)}),
             showEn ? m('.nwm-en', k.en || m.trust('&nbsp;')) : undefined,
           ])
           :
@@ -182,13 +214,13 @@ var MyanmarKeyboard = {
     return m('.nwm-container', [
       m('.nwm-left', [
         ctrl.keysLayout().left.map(function (keygroup) {
-          return self.keygroupView(keygroup, ctrl.showEn(), ctrl.showPh());
+          return self.keygroupView(keygroup, ctrl.showEn(), ctrl.showPh(), ctrl.onKeyPress);
         })
       ]),
       (ctrl.keysLayout().middle ?
         m('.nwm-middle', [
           ctrl.keysLayout().middle.map(function (keygroup) {
-            return self.keygroupView(keygroup, ctrl.showEn(), ctrl.showPh());
+            return self.keygroupView(keygroup, ctrl.showEn(), ctrl.showPh(), ctrl.onKeyPress);
           })
         ])
         :
@@ -196,7 +228,7 @@ var MyanmarKeyboard = {
       (ctrl.keysLayout().right ?
         m('.nwm-right', [
           ctrl.keysLayout().right.map(function (keygroup) {
-            return self.keygroupView(keygroup, ctrl.showEn(), ctrl.showPh());
+            return self.keygroupView(keygroup, ctrl.showEn(), ctrl.showPh(), ctrl.onKeyPress);
           })
         ])
         :
@@ -213,16 +245,20 @@ var SearchResults = {
     }
   },
   view: function (ctrl) {
+    var didSearch = ctrl.searchResults() != null;
+
     var list = [];
-    list = ctrl.searchResults().map(function (entry) {
-      return list.concat([
-        m("dt.term.my", [entry.pali]),
-        m("dd.definition.my", [entry.mm])
-      ]);
-    });
+    if (didSearch) {
+      list = ctrl.searchResults().map(function (entry) {
+        return list.concat([
+          m("dt.term.my", [entry.pali]),
+          m("dd.definition.my", [entry.mm])
+        ]);
+      });
+    }
 
     return m(".row.search-results", [
-      list.length > 0 ? m("dl", list) : m('.not-found', ctrl.searchTerms() ? 'No entry found!' : '')
+      list.length > 0 ? m("dl", list) : m('.not-found', didSearch && list.length == 0 ? 'No entry found!' : '')
     ]);
   }
 };
