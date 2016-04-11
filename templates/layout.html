@@ -16,8 +16,9 @@
   <!-- FONT
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
-  <link href="{{ url_for('static', filename='fonts/Padauk.ttf') }}" rel="stylesheet" type="text/css">
-
+  <style>
+    @font-face { font-family:Padauk; src:url("{{ url_for('static', filename='fonts/Padauk.ttf') }}"); }
+  </style>
   <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
@@ -26,7 +27,7 @@
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+  <link rel="icon" type="image/ico" href="{{ url_for('static', filename='images/favicon.ico') }}">
 
   <script src="{{ url_for('static', filename='js/mithril.min.js') }}"></script>
 </head>

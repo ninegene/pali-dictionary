@@ -3,8 +3,7 @@
 
 import os
 from sqlite3 import dbapi2 as sqlite3
-from flask import Flask, g, render_template, jsonify, request, Response
-import json
+from flask import Flask, g, render_template, jsonify, request
 
 
 app = Flask(__name__)
@@ -18,6 +17,8 @@ app.config.update(dict(
 ))
 app.config.from_envvar('PALI_DICTIONARY_SETTINGS', silent=True)
 
+DEFAULT_LIMIT = 50
+MAX_LIMIT = 100
 
 def dict_factory(cursor, row):
     d = {}
@@ -75,8 +76,8 @@ def index():
 
 @app.route('/api/myanmar/starts_with/<prefix>')
 def myanmar_starts_with(prefix):
-    limit = request.args.get("limit", 100)
-    limit = 500 if limit > 500 else limit
+    limit = request.args.get("limit", DEFAULT_LIMIT)
+    limit = MAX_LIMIT if limit > MAX_LIMIT else limit
     skip = request.args.get("skip", 0)
     prefix = prefix + '%'
     list = query("SELECT pali, mm FROM pali_mm WHERE mm like :prefix LIMIT :limit OFFSET :skip",
@@ -86,8 +87,8 @@ def myanmar_starts_with(prefix):
 
 @app.route('/api/myanmar/contains/<substring>')
 def myanmar_contains(substring):
-    limit = request.args.get("limit", 100)
-    limit = 500 if limit > 500 else limit
+    limit = request.args.get("limit", DEFAULT_LIMIT)
+    limit = MAX_LIMIT if limit > MAX_LIMIT else limit
     skip = request.args.get("skip", 0)
     substring = '%' + substring + '%'
     list = query("SELECT pali, mm FROM pali_mm WHERE mm like :substring LIMIT :limit OFFSET :skip",
@@ -97,8 +98,8 @@ def myanmar_contains(substring):
 
 @app.route('/api/root_word/starts_with/<substring>')
 def root_word_starts_with(substring):
-    limit = request.args.get("limit", 100)
-    limit = 500 if limit > 500 else limit
+    limit = request.args.get("limit", DEFAULT_LIMIT)
+    limit = MAX_LIMIT if limit > MAX_LIMIT else limit
     skip = request.args.get("skip", 0)
     # http://www.tutorialspoint.com/sqlite/sqlite_like_clause.htm
     substring = u'%√_' + substring + '%'
@@ -109,8 +110,8 @@ def root_word_starts_with(substring):
 
 @app.route('/api/pali_myanmar/contains/<substring>')
 def pali_myanmar_contains(substring):
-    limit = request.args.get("limit", 100)
-    limit = 500 if limit > 500 else limit
+    limit = request.args.get("limit", DEFAULT_LIMIT)
+    limit = MAX_LIMIT if limit > MAX_LIMIT else limit
     skip = request.args.get("skip", 0)
     substring = '%' + substring + '%'
     list = query("SELECT pali, mm FROM pali_mm WHERE pali like :substring or mm like :substring LIMIT :limit OFFSET :skip",
@@ -120,8 +121,8 @@ def pali_myanmar_contains(substring):
 
 @app.route('/api/pali/contains/<substring>')
 def pali_contains(substring):
-    limit = request.args.get("limit", 100)
-    limit = 500 if limit > 500 else limit
+    limit = request.args.get("limit", DEFAULT_LIMIT)
+    limit = MAX_LIMIT if limit > MAX_LIMIT else limit
     skip = request.args.get("skip", 0)
     substring = '%' + substring + '%'
     list = query("SELECT pali, mm FROM pali_mm WHERE pali like :substring LIMIT :limit OFFSET :skip",
@@ -131,8 +132,8 @@ def pali_contains(substring):
 
 @app.route('/api/pali/starts_with/<prefix>')
 def pali_starts_with(prefix):
-    limit = request.args.get("limit", 100)
-    limit = 500 if limit > 500 else limit
+    limit = request.args.get("limit", DEFAULT_LIMIT)
+    limit = MAX_LIMIT if limit > MAX_LIMIT else limit
     skip = request.args.get("skip", 0)
     prefix = prefix + '%'
     list = query("SELECT pali, mm FROM pali_mm WHERE pali like :prefix LIMIT :limit OFFSET :skip",
@@ -142,8 +143,8 @@ def pali_starts_with(prefix):
 
 @app.route('/api/pali/ends_with/<suffix>')
 def pali_ends_with(suffix):
-    limit = request.args.get("limit", 100)
-    limit = 500 if limit > 500 else limit
+    limit = request.args.get("limit", DEFAULT_LIMIT)
+    limit = MAX_LIMIT if limit > MAX_LIMIT else limit
     skip = request.args.get("skip", 0)
     suffix = '%' + suffix
     list = query("SELECT pali, mm FROM pali_mm WHERE pali like :suffix LIMIT :limit OFFSET :skip",

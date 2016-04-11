@@ -8,7 +8,18 @@ function onFetchResultsError(reqUrl, error) {
   return []; // return empty array on error
 }
 
+function showAjaxLoader() {
+  var $img = document.getElementById('ajax-loader');
+  $img.style.visibility = 'visible';
+}
+
+function hideAjaxLoader() {
+  var $img = document.getElementById('ajax-loader');
+  $img.style.visibility = 'hidden';
+}
+
 function fetchResults(url) {
+  showAjaxLoader();
   // http://lhorie.github.io/mithril/web-services.html
   return m.request({
     url: url,
@@ -20,6 +31,8 @@ function fetchResults(url) {
       return response.error;
     }
   }).then(logRequest.bind(this, url))
+    .then(function(data) { hideAjaxLoader(); return data; })
+    .catch(function(data) { hideAjaxLoader(); return data; })
     .catch(onFetchResultsError.bind(this, url));
 }
 
@@ -38,6 +51,18 @@ function myanmarContains(searchTerms) {
   return fetchResults(url);
 }
 
+function scrollTo(element, to, duration) {
+  if (duration < 0) return;
+  var difference = to - element.scrollTop;
+  var perTick = difference / duration * 10;
+
+  setTimeout(function() {
+    element.scrollTop = element.scrollTop + perTick;
+    if (element.scrollTop === to) return;
+    scrollTo(element, to, duration - 10);
+  }, 10);
+}
+
 var App = {
 
   controller: function (args) {
@@ -53,40 +78,39 @@ var App = {
     var showPh = m.prop(false);
 
     function scrollToSearchBox() {
-      location.hash = '#searchBox';
+      var $searchBox = document.getElementById('search-box');
+      scrollTo(document.body, $searchBox.offsetTop, 100);
     }
 
     function scrollToResults() {
-      var input = document.getElementById('search-box');
-      input.blur();
-      setTimeout(function() {
-        location.hash = '#searchResults'; // scroll to results
-      }, 200);
+      var $searchBox = document.getElementById('search-box');
+      $searchBox.blur();
+      var $results = document.getElementById('search-results');
+      scrollTo(document.body, $results.offsetTop, 100);
     }
 
     function handleKeyPress(key) {
-      var input = document.getElementById('search-box');
+      var $searchBox = document.getElementById('search-box');
       var selection = window.getSelection();
-      var selectedText = selection.toString();
-      var text = input.value;
-      console.log('selection:', selectedText);
+      // var selectedText = selection.toString();
+      var text = $searchBox.value;
 
-      if (input.selectionStart || input.selectionStart == '0') {
-        var start = input.selectionStart;
-        var end = input.selectionEnd;
+      if ($searchBox.selectionStart || $searchBox.selectionStart == '0') {
+        var start = $searchBox.selectionStart;
+        var end = $searchBox.selectionEnd;
         var cur = start;
         text = text.substring(0, start) + key + text.substring(end, text.length);
         cur = cur + key.length;
-        input.selectionStart = cur;
-        input.selectionEnd = cur;
+        $searchBox.selectionStart = cur;
+        $searchBox.selectionEnd = cur;
       } else {
         text = text + key;
       }
 
       searchTerms(text);
-      input.value = text;
-      input.focus();
-      input.blur();
+      $searchBox.value = text;
+      $searchBox.focus();
+      $searchBox.blur();
       scrollToSearchBox();
     }
 
@@ -100,9 +124,9 @@ var App = {
     }
 
     function handleClearSearch() {
-      var input = document.getElementById('search-box');
+      var $searchBox = document.getElementById('search-box');
       searchTerms('');
-      input.focus();
+      $searchBox.focus();
       scrollToSearchBox();
     }
 
@@ -148,7 +172,7 @@ var App = {
       m.component(SearchResults, {
         searchTerms: ctrl.searchTerms,
         searchResults: ctrl.searchResults
-      })
+      }),
     ]);
   }
 };
@@ -166,30 +190,32 @@ var SearchForm = {
 
   view: function (ctrl) {
     return m("form.search-wrapper", [
-      m('a[name=searchBox]'),
-      m("input#search-box.my[type=search]", {
-        placeholder: ctrl.searchPlaceholder(),
-        autocomplete: 'off',
-        autocapitalize: 'off',
-        autofocus: true,
-        required: true,
-        oninput: m.withAttr('value', ctrl.searchTerms),
-        value: ctrl.searchTerms()
-      }),
-      ctrl.searchTerms() ?
-        m("button.clear-search-icon.my[type=button]", {
-            onclick: ctrl.onClearSearch
+      m('img#ajax-loader', {src: 'static/images/ajax-loader.gif'}),
+      m('.search-box-wrapper', [
+        m("input#search-box.my[type=search]", {
+          placeholder: ctrl.searchPlaceholder(),
+          autocomplete: 'off',
+          autocapitalize: 'off',
+          autofocus: true,
+          required: true,
+          oninput: m.withAttr('value', ctrl.searchTerms),
+          value: ctrl.searchTerms()
+        }),
+        ctrl.searchTerms() ?
+          m("button.clear-search-icon.my[type=button]", {
+              onclick: ctrl.onClearSearch
+            },
+            'x')
+          :
+          null
+        ,
+        m("button.search-btn.my[type=button]", {
+            onclick: function () {
+              ctrl.onSearch(ctrl.searchTerms());
+            }
           },
-          'x')
-        :
-        null
-      ,
-      m("button.search-btn.my[type=button]", {
-          onclick: function () {
-            ctrl.onSearch(ctrl.searchTerms());
-          }
-        },
-        ctrl.searchButtonText())
+          ctrl.searchButtonText()),
+      ])
     ]);
   }
 };
@@ -271,8 +297,7 @@ var SearchResults = {
       });
     }
 
-    return m(".row.search-results", [
-      m('a[name=searchResults]'),
+    return m(".row.search-results", {id: 'search-results'}, [
       list.length > 0 ? m("dl", list) : m('.not-found', didSearch && list.length == 0 ? 'No entry found!' : '')
     ]);
   }
@@ -386,92 +411,4 @@ m.module(document.body, App);
 
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
-// Production steps of ECMA-262, Edition 5, 15.4.4.19
-// Reference: http://es5.github.io/#x15.4.4.19
-if (!Array.prototype.map) {
-
-  Array.prototype.map = function (callback, thisArg) {
-
-    var T, A, k;
-
-    if (this == null) {
-      throw new TypeError(' this is null or not defined');
-    }
-
-    // 1. Let O be the result of calling ToObject passing the |this|
-    //    value as the argument.
-    var O = Object(this);
-
-    // 2. Let lenValue be the result of calling the Get internal
-    //    method of O with the argument "length".
-    // 3. Let len be ToUint32(lenValue).
-    var len = O.length >>> 0;
-
-    // 4. If IsCallable(callback) is false, throw a TypeError exception.
-    // See: http://es5.github.com/#x9.11
-    if (typeof callback !== 'function') {
-      throw new TypeError(callback + ' is not a function');
-    }
-
-    // 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
-    if (arguments.length > 1) {
-      T = thisArg;
-    }
-
-    // 6. Let A be a new array created as if by the expression new Array(len)
-    //    where Array is the standard built-in constructor with that name and
-    //    len is the value of len.
-    A = new Array(len);
-
-    // 7. Let k be 0
-    k = 0;
-
-    // 8. Repeat, while k < len
-    while (k < len) {
-
-      var kValue, mappedValue;
-
-      // a. Let Pk be ToString(k).
-      //   This is implicit for LHS operands of the in operator
-      // b. Let kPresent be the result of calling the HasProperty internal
-      //    method of O with argument Pk.
-      //   This step can be combined with c
-      // c. If kPresent is true, then
-      if (k in O) {
-
-        // i. Let kValue be the result of calling the Get internal
-        //    method of O with argument Pk.
-        kValue = O[k];
-
-        // ii. Let mappedValue be the result of calling the Call internal
-        //     method of callback with T as the this value and argument
-        //     list containing kValue, k, and O.
-        mappedValue = callback.call(T, kValue, k, O);
-
-        // iii. Call the DefineOwnProperty internal method of A with arguments
-        // Pk, Property Descriptor
-        // { Value: mappedValue,
-        //   Writable: true,
-        //   Enumerable: true,
-        //   Configurable: true },
-        // and false.
-
-        // In browsers that support Object.defineProperty, use the following:
-        // Object.defineProperty(A, k, {
-        //   value: mappedValue,
-        //   writable: true,
-        //   enumerable: true,
-        //   configurable: true
-        // });
-
-        // For best browser support, use the following:
-        A[k] = mappedValue;
-      }
-      // d. Increase k by 1.
-      k++;
-    }
-
-    // 9. return A
-    return A;
-  };
-}
+Array.prototype.map||(Array.prototype.map=function(r,t){var n,o,e;if(null==this)throw new TypeError(" this is null or not defined");var i=Object(this),a=i.length>>>0;if("function"!=typeof r)throw new TypeError(r+" is not a function");for(arguments.length>1&&(n=t),o=Array(a),e=0;a>e;){var p,f;e in i&&(p=i[e],f=r.call(n,p,e,i),o[e]=f),e++}return o});

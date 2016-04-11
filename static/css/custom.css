@@ -2,16 +2,12 @@ body {
   margin: 2rem 0;
 }
 
-.title {
-  margin-bottom: 1em;
-}
-
 .container {
   margin-top: 2.5rem;
 }
 
 .my {
-  font-family: Padauk, sans-serif;
+  font-family: Padauk;
 }
 
 .term {
@@ -37,39 +33,55 @@ h1 {
   position: relative;
 }
 
+.search-wrapper #ajax-loader {
+  visibility: hidden;
+  display: block;
+  height: 20px;
+  margin: auto;
+  padding-bottom: 5px;
+}
+
+.search-box-wrapper {
+  position: relative;
+  margin: 1px;
+  padding: 1px;
+}
+
 input#search-box {
-  font-family: Padauk, sans-serif;
+  font-family: Padauk;
   font-size: 1em;
   width: 220px;
   height: 50px;
+  line-height: 50px;
   border: 1px solid rgba(85, 39, 10, 0.7);
   border-right: 0;
   background: transparent;
   color: #000;
   margin: 0;
   border-radius: 0;
-  padding-right: 50px;
+  padding-right: 30px;
 }
 
 .clear-search-icon {
-  font-size: 1em;
+  font-size: 20px;
+  font-family: sans-serif;
   color: #000;
-  height: 48px;
-  line-height: normal;
+  line-height: 30px;
+  height: 30px;
+  width: 30px;
   letter-spacing: 0;
-  padding: 0 10px;
-  border-radius: 0;
+  border-radius: 30px;
   border: 0;
   background-color: transparent;
-  /*background: rgba(85, 39, 10, 0.7);*/
   position: absolute;
-  top: 1px;
-  margin-left: -2em;
+  top: 10px;
+  margin-left: -30px;
+  padding: 0 10px;
 }
 
 .clear-search-icon:hover, .clear-search-icon:focus {
   color: #000;
-  background-color: #F1F1F1;
+  background-color: transparent;
   border-radius: 0;
   border: 0;
 }
@@ -77,6 +89,7 @@ input#search-box {
 .search-btn {
   display: inline-block;
   height: 50px;
+  width: 50px;
   text-align: center;
   font-size: 1em;
   font-weight: 600;
@@ -90,6 +103,7 @@ input#search-box {
   cursor: pointer;
   box-sizing: border-box;
   margin: 0;
+  padding: 0;
 }
 
 .search-btn:hover, .search-btn:focus {
@@ -147,7 +161,7 @@ ul.nwm-keygroup {
 }
 
 input.nwm-my {
-  font-family: Padauk, sans-serif;
+  font-family: Padauk;
   font-weight: 600;
   font-size: 1em;
   background-color: transparent;
