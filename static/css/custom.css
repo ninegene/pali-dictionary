@@ -34,11 +34,10 @@ h1 {
 }
 
 .search-wrapper #ajax-loader {
-  visibility: hidden;
-  display: block;
+  display: none;
   height: 20px;
   margin: auto;
-  padding-bottom: 5px;
+  padding-top: 5px;
 }
 
 .search-box-wrapper {

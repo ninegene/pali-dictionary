@@ -10,12 +10,12 @@ function onFetchResultsError(reqUrl, error) {
 
 function showAjaxLoader() {
   var $img = document.getElementById('ajax-loader');
-  $img.style.visibility = 'visible';
+  $img.style.display = 'block';
 }
 
 function hideAjaxLoader() {
   var $img = document.getElementById('ajax-loader');
-  $img.style.visibility = 'hidden';
+  $img.style.display = 'none';
 }
 
 function fetchResults(url) {
@@ -54,13 +54,13 @@ function myanmarContains(searchTerms) {
 function scrollTo(element, to, duration) {
   if (duration < 0) return;
   var difference = to - element.scrollTop;
-  var perTick = difference / duration * 10;
+  var perTick = difference / duration * 25;
 
   setTimeout(function() {
     element.scrollTop = element.scrollTop + perTick;
     if (element.scrollTop === to) return;
-    scrollTo(element, to, duration - 10);
-  }, 10);
+    scrollTo(element, to, duration - 25);
+  }, 25);
 }
 
 var App = {
@@ -79,14 +79,14 @@ var App = {
 
     function scrollToSearchBox() {
       var $searchBox = document.getElementById('search-box');
-      scrollTo(document.body, $searchBox.offsetTop, 100);
+      scrollTo(document.body, $searchBox.offsetTop, 250);
     }
 
     function scrollToResults() {
       var $searchBox = document.getElementById('search-box');
       $searchBox.blur();
       var $results = document.getElementById('search-results');
-      scrollTo(document.body, $results.offsetTop, 100);
+      scrollTo(document.body, $results.offsetTop, 250);
     }
 
     function handleKeyPress(key) {
@@ -190,7 +190,6 @@ var SearchForm = {
 
   view: function (ctrl) {
     return m("form.search-wrapper", [
-      m('img#ajax-loader', {src: 'static/images/ajax-loader.gif'}),
       m('.search-box-wrapper', [
         m("input#search-box.my[type=search]", {
           placeholder: ctrl.searchPlaceholder(),
@@ -215,7 +214,8 @@ var SearchForm = {
             }
           },
           ctrl.searchButtonText()),
-      ])
+        m('img#ajax-loader', {class: 'hide', src: 'static/images/ajax-loader.gif'}),
+      ]),
     ]);
   }
 };
