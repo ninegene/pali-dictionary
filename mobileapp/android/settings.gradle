@@ -1,0 +1,3 @@
+rootProject.name = 'PaliDict'
+
+include ':app'
