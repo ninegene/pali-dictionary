@@ -1,4 +1,5 @@
-import React from "react-native";
+import React from "react";
+import ReactNative from 'react-native';
 import Styles from "../Styles";
 
 const {
@@ -8,7 +9,7 @@ const {
   ListView,
   RecyclerViewBackedScrollView,
   TouchableHighlight,
-} = React;
+} = ReactNative;
 
 // See: https://facebook.github.io/react/docs/reusable-components.html#prop-validation
 const propTypes = {
@@ -94,7 +95,7 @@ class App extends React.Component {
 }
 
 // See: https://facebook.github.io/react-native/docs/flexbox.html
-const styles = React.StyleSheet.create({
+const styles = ReactNative.StyleSheet.create({
   mainContainer: {
     flex: 1,
     paddingTop: 20,
