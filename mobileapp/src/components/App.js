@@ -1,7 +1,7 @@
 import React from "react";
 import ReactNative from 'react-native';
-import Styles from "../Styles";
-
+import Global, {Styles} from "../Global";
+import SQLite from 'react-native-sqlite-storage';
 const {
   View,
   Text,
@@ -9,7 +9,11 @@ const {
   ListView,
   RecyclerViewBackedScrollView,
   TouchableHighlight,
+  Alert,
 } = ReactNative;
+
+SQLite.DEBUG(Global.isDevEnv);
+SQLite.enablePromise(true);
 
 // See: https://facebook.github.io/react/docs/reusable-components.html#prop-validation
 const propTypes = {
@@ -37,6 +41,17 @@ class App extends React.Component {
     };
 
     this.pressRows = {};
+  }
+
+  componentDidMount() {
+    console.log(SQLite);
+    SQLite.echoTest()
+      .then(() => {
+        Alert.alert("SQLite.echoTest() successful!");
+      })
+      .catch(() => {
+        Alert.alert("SQLite.echoTest() failed!");
+      });
   }
 
   handleSubmitSearch() {
