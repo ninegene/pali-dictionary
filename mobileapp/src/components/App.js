@@ -1,6 +1,7 @@
 import React from "react";
 import ReactNative from "react-native";
-import Global, {Styles} from "../Global";
+import {Styles} from "../Global";
+import Sql from "../Sql";
 const {
   View,
   Text,
@@ -10,7 +11,6 @@ const {
   TouchableHighlight,
   Alert,
 } = ReactNative;
-import Sql from '../Sql';
 
 // See: https://facebook.github.io/react/docs/reusable-components.html#prop-validation
 const propTypes = {
@@ -34,7 +34,10 @@ class App extends React.Component {
 
   componentDidMount() {
     console.log('componentDidMount');
-    Sql.openDB();
+    Sql.openDB()
+      .then(() => {
+        this.queryPaliStartsWith();
+      });
   }
 
   componentWillUnmount() {
@@ -42,23 +45,25 @@ class App extends React.Component {
     Sql.closeDB();
   }
 
-  handleSubmitSearch() {
-    console.log('handleSubmitSearch', this.state.q);
+  queryPaliStartsWith() {
     Sql.pali_contains(this.state.q)
       .then(rows => {
         this.setState({dataSource: this.state.dataSource.cloneWithRows(rows)});
       });
   }
 
+  handleSubmitSearch() {
+    console.log('handleSubmitSearch', this.state.q);
+
+    // Sql.query('SELECT * FROM sqlite_master')
+    //   .then(rows => {
+    //     console.log('sqlite_master', rows);
+    //   });
+    this.queryPaliStartsWith();
+  }
+
   handleRowPress(rowID) {
     console.log('handleRowPress', rowID);
-    // this.pressRows[rowID] = !this.pressRows[rowID];
-    // this.setState({dataSource: this.state.dataSource.cloneWithRows(genRows(this.pressRows))});
-
-    Sql.query('SELECT * FROM sqlite_master')
-      .then(rows => {
-        console.log(rows);
-      })
   }
 
   renderRow(rowData, sectionID, rowID) {
@@ -97,12 +102,12 @@ class App extends React.Component {
           />
         </View>
         <ListView
-            dataSource={this.state.dataSource}
-            renderRow={this.renderRow.bind(this)}
-            renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
-            renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={styles.separator} />}
-            enableEmptySections={true}
-          />
+          dataSource={this.state.dataSource}
+          renderRow={this.renderRow.bind(this)}
+          renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
+          renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={styles.separator} />}
+          enableEmptySections={true}
+        />
       </View>
     );
   }
@@ -137,9 +142,7 @@ const styles = ReactNative.StyleSheet.create({
     height: 1,
     backgroundColor: '#CCCCCC',
   },
-  rowContent: {
-
-  },
+  rowContent: {},
   rowTitle: {
     fontSize: Styles.mdFont,
   },

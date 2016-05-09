@@ -5,11 +5,13 @@ SQLite.DEBUG(Global.isDevEnv);
 SQLite.enablePromise(true);
 
 const DBNAME = 'pali_dict.db';
+const FROM_LOCATION = '~pali_dict.db';
+
 let Sql = {};
 let db;
 
 Sql.openDB = () => {
-  SQLite.openDatabase({name: DBNAME, createFromLocation: 1})
+  return SQLite.openDatabase({name: DBNAME, createFromLocation: FROM_LOCATION})
     .then(instance => {
       db = instance;
       console.log("SQLite.openDatabase() successful!");

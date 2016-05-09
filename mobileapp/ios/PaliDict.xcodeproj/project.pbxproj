@@ -23,7 +23,7 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		56DFDA4C4E0841939C16BCC2 /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFB3CF80A9B34CEE9EC3C385 /* libSQLite.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		B53F73E51CE0534100DFDF45 /* pali_dict.db in Resources */ = {isa = PBXBuildFile; fileRef = B53F73E41CE0534100DFDF45 /* pali_dict.db */; };
+		B53F74191CE0643000DFDF45 /* pali_dict.db in Resources */ = {isa = PBXBuildFile; fileRef = B53F74181CE0643000DFDF45 /* pali_dict.db */; };
 		B575E8041CDE71410062E524 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B575E8031CDE71410062E524 /* libsqlite3.0.tbd */; };
 /* End PBXBuildFile section */
 
@@ -137,7 +137,7 @@
 		4D0CF629F3694E5586F4BE1A /* SQLite.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = SQLite.xcodeproj; path = "../node_modules/react-native-sqlite-storage/src/ios/SQLite.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
-		B53F73E41CE0534100DFDF45 /* pali_dict.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = pali_dict.db; sourceTree = "<group>"; };
+		B53F74181CE0643000DFDF45 /* pali_dict.db */ = {isa = PBXFileReference; lastKnownFileType = file; name = pali_dict.db; path = ../../db/pali_dict.db; sourceTree = "<group>"; };
 		B575E8031CDE71410062E524 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		BFB3CF80A9B34CEE9EC3C385 /* libSQLite.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSQLite.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -248,7 +248,7 @@
 		13B07FAE1A68108700A75B9A /* PaliDict */ = {
 			isa = PBXGroup;
 			children = (
-				B53F73E31CE0534100DFDF45 /* www */,
+				B53F74181CE0643000DFDF45 /* pali_dict.db */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -322,15 +322,6 @@
 				00E356EE1AD99517003FC87E /* PaliDictTests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		B53F73E31CE0534100DFDF45 /* www */ = {
-			isa = PBXGroup;
-			children = (
-				B53F73E41CE0534100DFDF45 /* pali_dict.db */,
-			);
-			name = www;
-			path = PaliDict/www;
 			sourceTree = "<group>";
 		};
 		B575E7F11CDE57260062E524 /* Products */ = {
@@ -552,7 +543,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B53F73E51CE0534100DFDF45 /* pali_dict.db in Resources */,
+				B53F74191CE0643000DFDF45 /* pali_dict.db in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
