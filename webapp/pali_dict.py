@@ -15,7 +15,7 @@ app.config.update(dict(
     DEBUG=True,
     JSON_AS_ASCII=False,
 ))
-app.config.from_envvar('PALI_DICTIONARY_SETTINGS', silent=True)
+app.config.from_envvar('PALI_DICT_SETTINGS', silent=True)
 
 DEFAULT_LIMIT = 50
 MAX_LIMIT = 100
