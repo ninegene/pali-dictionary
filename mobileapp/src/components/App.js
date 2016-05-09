@@ -1,7 +1,6 @@
 import React from "react";
-import ReactNative from 'react-native';
+import ReactNative from "react-native";
 import Global, {Styles} from "../Global";
-import SQLite from 'react-native-sqlite-storage';
 const {
   View,
   Text,
@@ -11,22 +10,12 @@ const {
   TouchableHighlight,
   Alert,
 } = ReactNative;
-
-SQLite.DEBUG(Global.isDevEnv);
-SQLite.enablePromise(true);
+import Sql from '../Sql';
 
 // See: https://facebook.github.io/react/docs/reusable-components.html#prop-validation
 const propTypes = {
   instructions: React.PropTypes.string,
 };
-
-function genRows(pressedRows = {}) {
-  let rows = [];
-  for (let i = 0; i < 100; i++) {
-    rows.push({mm: 'mm ' + i, pali: 'Row ' + i + (pressedRows[i] ? ' (pressed)': '')});
-  }
-  return rows;
-}
 
 class App extends React.Component {
 
@@ -36,44 +25,53 @@ class App extends React.Component {
     let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
     this.state = {
-      q: '',
-      dataSource: ds.cloneWithRows(genRows()),
+      q: 'ခက',
+      dataSource: ds.cloneWithRows([]),
     };
 
     this.pressRows = {};
   }
 
   componentDidMount() {
-    console.log(SQLite);
-    SQLite.echoTest()
-      .then(() => {
-        Alert.alert("SQLite.echoTest() successful!");
-      })
-      .catch(() => {
-        Alert.alert("SQLite.echoTest() failed!");
-      });
+    console.log('componentDidMount');
+    Sql.openDB();
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount');
+    Sql.closeDB();
   }
 
   handleSubmitSearch() {
     console.log('handleSubmitSearch', this.state.q);
+    Sql.pali_contains(this.state.q)
+      .then(rows => {
+        this.setState({dataSource: this.state.dataSource.cloneWithRows(rows)});
+      });
   }
 
   handleRowPress(rowID) {
     console.log('handleRowPress', rowID);
-    this.pressRows[rowID] = !this.pressRows[rowID];
-    this.setState({dataSource: this.state.dataSource.cloneWithRows(genRows(this.pressRows))});
+    // this.pressRows[rowID] = !this.pressRows[rowID];
+    // this.setState({dataSource: this.state.dataSource.cloneWithRows(genRows(this.pressRows))});
+
+    Sql.query('SELECT * FROM sqlite_master')
+      .then(rows => {
+        console.log(rows);
+      })
   }
 
-  renderRows(rowData, sectionID, rowID) {
+  renderRow(rowData, sectionID, rowID) {
+    console.log('renderRow', rowData);
     return (
       <TouchableHighlight onPress={this.handleRowPress.bind(this, rowID)}>
         <View>
           <View style={styles.row}>
             <Text style={styles.rowTitle}>
-              {rowData.mm}
+              {rowData.pali}
             </Text>
             <Text style={styles.rowText}>
-              {rowData.pali}
+              {rowData.mm}
             </Text>
           </View>
         </View>
@@ -100,9 +98,10 @@ class App extends React.Component {
         </View>
         <ListView
             dataSource={this.state.dataSource}
-            renderRow={this.renderRows.bind(this)}
+            renderRow={this.renderRow.bind(this)}
             renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
             renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={styles.separator} />}
+            enableEmptySections={true}
           />
       </View>
     );
