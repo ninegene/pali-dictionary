@@ -24,6 +24,8 @@
 		56DFDA4C4E0841939C16BCC2 /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFB3CF80A9B34CEE9EC3C385 /* libSQLite.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		B53F74191CE0643000DFDF45 /* pali_dict.db in Resources */ = {isa = PBXBuildFile; fileRef = B53F74181CE0643000DFDF45 /* pali_dict.db */; };
+		B53F74481CE3046A00DFDF45 /* Padauk.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B53F74471CE3046A00DFDF45 /* Padauk.ttf */; };
+		B53F744E1CE31FCC00DFDF45 /* Zawgyi-One.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B53F744D1CE31FCC00DFDF45 /* Zawgyi-One.ttf */; };
 		B575E8041CDE71410062E524 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B575E8031CDE71410062E524 /* libsqlite3.0.tbd */; };
 /* End PBXBuildFile section */
 
@@ -138,6 +140,8 @@
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		B53F74181CE0643000DFDF45 /* pali_dict.db */ = {isa = PBXFileReference; lastKnownFileType = file; name = pali_dict.db; path = ../../db/pali_dict.db; sourceTree = "<group>"; };
+		B53F74471CE3046A00DFDF45 /* Padauk.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Padauk.ttf; path = PaliDict/Padauk.ttf; sourceTree = "<group>"; };
+		B53F744D1CE31FCC00DFDF45 /* Zawgyi-One.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Zawgyi-One.ttf"; path = "PaliDict/Zawgyi-One.ttf"; sourceTree = "<group>"; };
 		B575E8031CDE71410062E524 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		BFB3CF80A9B34CEE9EC3C385 /* libSQLite.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSQLite.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -248,6 +252,7 @@
 		13B07FAE1A68108700A75B9A /* PaliDict */ = {
 			isa = PBXGroup;
 			children = (
+				B575E8031CDE71410062E524 /* libsqlite3.0.tbd */,
 				B53F74181CE0643000DFDF45 /* pali_dict.db */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -305,11 +310,11 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				B575E8031CDE71410062E524 /* libsqlite3.0.tbd */,
 				13B07FAE1A68108700A75B9A /* PaliDict */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* PaliDictTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
+				B53F74461CE3044C00DFDF45 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -322,6 +327,15 @@
 				00E356EE1AD99517003FC87E /* PaliDictTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B53F74461CE3044C00DFDF45 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B53F744D1CE31FCC00DFDF45 /* Zawgyi-One.ttf */,
+				B53F74471CE3046A00DFDF45 /* Padauk.ttf */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		B575E7F11CDE57260062E524 /* Products */ = {
@@ -543,9 +557,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B53F74481CE3046A00DFDF45 /* Padauk.ttf in Resources */,
 				B53F74191CE0643000DFDF45 /* pali_dict.db in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				B53F744E1CE31FCC00DFDF45 /* Zawgyi-One.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

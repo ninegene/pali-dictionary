@@ -10,6 +10,7 @@ const {
   RecyclerViewBackedScrollView,
   TouchableHighlight,
   Alert,
+  Switch,
 } = ReactNative;
 
 // See: https://facebook.github.io/react/docs/reusable-components.html#prop-validation
@@ -17,19 +18,35 @@ const propTypes = {
   instructions: React.PropTypes.string,
 };
 
+const UNICODE_FONT = 'Padauk';
+const ZAWGYI_FONT = 'Zawgyi-One';
+
+// const UNICODE_FONT_DISPLAY_NAME = 'Unicode (Padauk)';
+// const ZAWGYI_FONT_DISPLAY_NAME = 'Zawgyi-One';
+
 class App extends React.Component {
 
   constructor(props, context) {
     super(props, context);
 
-    let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    let ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => {
+        let hasChanged = r1 !== r2 || this.state.wasUnicode !== this.state.isUnicode;
+        // console.log('rowHasChanged was:', this.state.wasUnicode, ' is:', this.state.isUnicode);
+        // console.log('rowHasChanged', hasChanged);
+        return hasChanged;
+      }
+    });
+
+    let rows = [];
 
     this.state = {
+      wasUnicode: false,
+      isUnicode: true,
       q: 'ခက',
-      dataSource: ds.cloneWithRows([]),
+      rows: rows,
+      dataSource: ds.cloneWithRows(rows),
     };
-
-    this.pressRows = {};
   }
 
   componentDidMount() {
@@ -48,7 +65,10 @@ class App extends React.Component {
   queryPaliStartsWith() {
     Sql.pali_contains(this.state.q)
       .then(rows => {
-        this.setState({dataSource: this.state.dataSource.cloneWithRows(rows)});
+        this.setState({
+          rows: rows,
+          dataSource: this.state.dataSource.cloneWithRows(rows),
+        });
       });
   }
 
@@ -62,25 +82,29 @@ class App extends React.Component {
     this.queryPaliStartsWith();
   }
 
-  handleRowPress(rowID) {
-    console.log('handleRowPress', rowID);
+  handleFontSwitch(isUnicode) {
+    console.log('handleFontSwitch', isUnicode);
+    let wasUnicode = this.state.isUnicode; // old value
+    this.setState({
+      wasUnicode: wasUnicode,
+      isUnicode: isUnicode,
+      dataSource: this.state.dataSource.cloneWithRows(this.state.rows),
+    });
   }
 
   renderRow(rowData, sectionID, rowID) {
-    console.log('renderRow', rowData);
+    // console.log('renderRow isUnicode', this.state.isUnicode);
+
     return (
-      <TouchableHighlight onPress={this.handleRowPress.bind(this, rowID)}>
-        <View>
-          <View style={styles.row}>
-            <Text style={styles.rowTitle}>
-              {rowData.pali}
-            </Text>
-            <Text style={styles.rowText}>
-              {rowData.mm}
-            </Text>
-          </View>
-        </View>
-      </TouchableHighlight>
+      <View style={styles.row}>
+        <Text style={[styles.rowTitle, (this.state.isUnicode ? styles.unicode : styles.zawgyi)]}>
+          {rowData.pali}
+        </Text>
+        <Text
+          style={[styles.rowText, (this.state.isUnicode ? styles.unicode : styles.zawgyi)]}>
+          {rowData.mm}
+        </Text>
+      </View>
     );
   }
 
@@ -96,11 +120,17 @@ class App extends React.Component {
            this.setState({q: text});
            }}
             placeholder="Search..."
-            style={styles.searchTextInput}
+            style={[styles.searchTextInput, (this.state.isUnicode ? styles.unicode : styles.zawgyi)]}
             value={this.state.q}
             onSubmitEditing={this.handleSubmitSearch.bind(this)}
           />
         </View>
+        <Switch
+          onValueChange={this.handleFontSwitch.bind(this)}
+          style={styles.switch}
+          value={this.state.isUnicode}
+        />
+        <Text>{this.state.isUnicode ? 'Unicode (Padauk)' : 'Zawgyi-One'}</Text>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}
@@ -132,7 +162,9 @@ const styles = ReactNative.StyleSheet.create({
     paddingLeft: 8,
     height: 35,
   },
-
+  switch: {
+    marginBottom: 10
+  },
   row: {
     justifyContent: 'center',
     padding: 10,
@@ -149,7 +181,12 @@ const styles = ReactNative.StyleSheet.create({
   rowText: {
     fontSize: Styles.smFont,
   },
-
+  unicode: {
+    fontFamily: UNICODE_FONT,
+  },
+  zawgyi: {
+    fontFamily: ZAWGYI_FONT,
+  },
 });
 
 App.propTypes = propTypes;
